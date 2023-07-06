@@ -68,6 +68,10 @@
 	<FormSection>
 		<FormLink to="/registry"><template #icon><i class="ti ti-adjustments"></i></template>{{ i18n.ts.registry }}</FormLink>
 	</FormSection>
+
+	<FormSection>
+		<FormLink to="/settings/noyaskey-features"><template #icon><i class="ti ti-flask"></i></template>{{ i18n.ts.noyaskeyFeatures }}</FormLink>
+	</FormSection>
 </div>
 </template>
 

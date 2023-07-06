@@ -32,7 +32,8 @@
 			<div v-if="image.comment" :class="$style.indicator">ALT</div>
 			<div v-if="image.isSensitive" :class="$style.indicator" style="color: var(--warn);">NSFW</div>
 		</div>
-		<button :class="$style.menu" class="_button" @click.stop="showMenu"><i class="ti ti-dots" style="vertical-align: middle;"></i></button>
+		<button v-if="props.image.isSensitive == false" :class="$style.menu" class="_button" @click.stop="showMenu"><i class="ti ti-dots" style="vertical-align: middle;"></i></button>
+		<i class="ti ti-eye-off" :class="$style.hide" @click.stop="hide = true"></i>
 	</template>
 </div>
 </template>
@@ -56,6 +57,7 @@ const props = defineProps<{
 let hide = $ref(true);
 let darkMode: boolean = $ref(defaultStore.state.darkMode);
 
+
 const url = $computed(() => (props.raw || defaultStore.state.loadRawImages)
 	? props.image.url
 	: defaultStore.state.disableShowingAnimatedImages
@@ -78,23 +80,16 @@ watch(() => props.image, () => {
 });
 
 function showMenu(ev: MouseEvent) {
-	os.popupMenu([{
-		text: i18n.ts.hide,
-		icon: 'ti ti-eye-off',
-		action: () => {
-			hide = true;
-		},
-	}, ...(iAmModerator ? [{
+	os.popupMenu(iAmModerator ? [{
 		text: i18n.ts.markAsSensitive,
 		icon: 'ti ti-eye-exclamation',
 		danger: true,
 		action: () => {
 			os.apiWithDialog('drive/files/update', { fileId: props.image.id, isSensitive: true });
 		},
-	}] : [])], ev.currentTarget ?? ev.target);
+	}] : [], ev.currentTarget ?? ev.target);
 }
-
-</script>
+	</script>
 
 <style lang="scss" module>
 .hidden {
@@ -111,6 +106,20 @@ function showMenu(ev: MouseEvent) {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+.hide {
+	display: block;
+	position: absolute;
+	border-radius: 6px;
+	background-color: var(--fg);
+	color: var(--accentLighten);
+	font-size: 12px;
+	opacity: .5;
+	padding: 5px 8px;
+	text-align: center;
+	cursor: pointer;
+	top: 12px;
+	right: 12px;
 }
 
 .hiddenTextWrapper {
@@ -137,8 +146,8 @@ function showMenu(ev: MouseEvent) {
 	backdrop-filter: var(--blur, blur(15px));
 	color: #fff;
 	font-size: 0.8em;
-	width: 32px;
-	height: 32px;
+	width: 28px;
+	height: 28px;
 	text-align: center;
 	bottom: 10px;
 	right: 10px;

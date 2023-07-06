@@ -104,7 +104,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 					throw new ApiError(meta.errors.noSuchUserList);
 				}
 			}
-
 			const now = new Date();
 
 			const antenna = await this.antennasRepository.insert({

@@ -105,6 +105,9 @@
 			<button v-else class="_button" :class="$style.noteFooterButton" disabled>
 				<i class="ti ti-ban"></i>
 			</button>
+			<button v-if="appearNote.text" ref="stealButton" class="button _button" @mousedown="stealMenu(appearNote, stealButton)">
+					<i class="ti ti-swipe"></i>
+			</button>
 			<button v-if="appearNote.myReaction == null" ref="reactButton" :class="$style.noteFooterButton" class="_button" @mousedown="react()">
 				<i v-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
 				<i v-else class="ti ti-plus"></i>
@@ -614,7 +617,7 @@ if (appearNote.replyId) {
 	opacity: 0.7;
 
 	&:not(:last-child) {
-		margin-right: 28px;
+		margin-right: 22px;
 	}
 
 	&:hover {
@@ -660,7 +663,7 @@ if (appearNote.replyId) {
 @container (max-width: 350px) {
 	.noteFooterButton {
 		&:not(:last-child) {
-			margin-right: 18px;
+			margin-right: 12px;
 		}
 	}
 }
@@ -677,7 +680,7 @@ if (appearNote.replyId) {
 
 	.noteFooterButton {
 		&:not(:last-child) {
-			margin-right: 12px;
+			margin-right: 8px;
 		}
 	}
 }

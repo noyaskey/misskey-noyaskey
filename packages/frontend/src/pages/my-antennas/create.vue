@@ -16,7 +16,6 @@ let draft = $ref({
 	name: '',
 	src: 'all',
 	userListId: null,
-	users: [],
 	keywords: [],
 	excludeKeywords: [],
 	withReplies: false,
