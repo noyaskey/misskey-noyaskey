@@ -21,6 +21,7 @@
 			<i v-if="notification.type === 'follow'" class="ti ti-plus"></i>
 			<i v-else-if="notification.type === 'receiveFollowRequest'" class="ti ti-clock"></i>
 			<i v-else-if="notification.type === 'followRequestAccepted'" class="ti ti-check"></i>
+			<i v-else-if="notification.type === 'groupInvited'" class="ti ti-certificate-2"></i>
 			<i v-else-if="notification.type === 'renote'" class="ti ti-repeat"></i>
 			<i v-else-if="notification.type === 'reply'" class="ti ti-arrow-back-up"></i>
 			<i v-else-if="notification.type === 'mention'" class="ti ti-at"></i>
@@ -190,7 +191,7 @@ useTooltip(reactionRef, (showing) => {
 	}
 }
 
-.t_follow, .t_followRequestAccepted, .t_receiveFollowRequest {
+.t_follow, .t_followRequestAccepted, .t_receiveFollowRequest{
 	padding: 3px;
 	background: #36aed2;
 	pointer-events: none;

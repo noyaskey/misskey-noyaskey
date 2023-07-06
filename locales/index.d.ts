@@ -157,6 +157,8 @@ export interface Locale {
     "flagAsBotDescription": string;
     "flagAsCat": string;
     "flagAsCatDescription": string;
+    "speakAsCat": string;
+    "speakAsCatDescription": string;
     "flagShowTimelineReplies": string;
     "flagShowTimelineRepliesDescription": string;
     "autoAcceptFollowed": string;
@@ -431,15 +433,24 @@ export interface Locale {
     "help": string;
     "inputMessageHere": string;
     "close": string;
+    "group": string;
+    "groups": string;
+    "createGroup": string;
+    "ownedGroups": string;
+    "joinedGroups": string;
     "invites": string;
+    "groupName": string;
     "members": string;
     "transfer": string;
+    "messagingWithUser": string;
+    "messagingWithGroup": string;
     "title": string;
     "text": string;
     "enable": string;
     "next": string;
     "retype": string;
     "noteOf": string;
+    "inviteToGroup": string;
     "quoteAttached": string;
     "quoteQuestion": string;
     "noMessagesYet": string;
@@ -464,10 +475,13 @@ export interface Locale {
     "or": string;
     "language": string;
     "uiLanguage": string;
+    "groupInvited": string;
     "aboutX": string;
     "emojiStyle": string;
     "native": string;
     "disableDrawer": string;
+    "youHaveNoGroups": string;
+    "joinOrCreateGroup": string;
     "showNoteActionsOnlyHover": string;
     "noHistory": string;
     "signinHistory": string;
@@ -743,6 +757,7 @@ export interface Locale {
     "deleteConfirm": string;
     "invalidValue": string;
     "registry": string;
+    "noyaskeyFeatures": string;
     "closeAccount": string;
     "currentVersion": string;
     "latestVersion": string;
@@ -858,6 +873,8 @@ export interface Locale {
     "incorrectPassword": string;
     "voteConfirm": string;
     "hide": string;
+    "leaveGroup": string;
+    "leaveGroupConfirm": string;
     "useDrawerReactionPickerForMobile": string;
     "welcomeBackWithName": string;
     "clickToFinishEmailVerification": string;
@@ -1829,6 +1846,7 @@ export interface Locale {
         "homeTimeline": string;
         "users": string;
         "userList": string;
+        "userGroup": string;
     };
     "_weekday": {
         "sunday": string;
@@ -2061,9 +2079,12 @@ export interface Locale {
         "youGotReply": string;
         "youGotQuote": string;
         "youRenoted": string;
+        "youGotMessagingMessageFromUser": string;
+        "youGotMessagingMessageFromGroup": string;
         "youWereFollowed": string;
         "youReceivedFollowRequest": string;
         "yourFollowRequestAccepted": string;
+        "youWereInvitedToGroup": string;
         "pollEnded": string;
         "unreadAntennaNote": string;
         "emptyPushNotificationMessage": string;
