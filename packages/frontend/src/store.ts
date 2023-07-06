@@ -106,6 +106,18 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'account',
 		default: false,
 	},
+	showStarButton: {
+		where: 'device',
+		default: false,
+	},
+	showFavoriteButton: {
+		where: 'device',
+		default: false,
+	},
+	showStarAndFavoriteIntegrationButton: {
+		where: 'device',
+		default: false,
+	},
 
 	menu: {
 		where: 'deviceAccount',
@@ -341,6 +353,26 @@ export const defaultStore = markRaw(new Storage('base', {
 	additionalUnicodeEmojiIndexes: {
 		where: 'device',
 		default: {} as Record<string, Record<string, string[]>>,
+	},
+	nicknameEnabled: {
+		where: 'account',
+		default: false,
+	},
+	nicknameMap: {
+		where: 'account',
+		default: {} as Record<string, string>,
+	},
+	stealConfirmed: {
+		where: 'account',
+		default: false,
+	},
+	numberQuoteConfirmed: {
+		where: 'account',
+		default: false,
+	},
+	numberQuoteEnabled: {
+		where: 'account',
+		default: false,
 	},
 }));
 

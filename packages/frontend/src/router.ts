@@ -174,6 +174,10 @@ export const routes = [{
 		name: 'general',
 		component: page(() => import('./pages/settings/custom-css.vue')),
 	}, {
+		path: '/noyaskey-features',
+		name: 'noyaskey-features',
+		component: page(() => import('./pages/settings/noyaskey-features.vue')),
+	}, {
 		path: '/accounts',
 		name: 'profile',
 		component: page(() => import('./pages/settings/accounts.vue')),
