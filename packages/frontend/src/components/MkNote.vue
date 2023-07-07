@@ -116,33 +116,41 @@
 					<button v-else :class="$style.footerButton" class="_button" disabled>
 						<i class="ti ti-ban"></i>
 					</button>
-					<button v-if="appearNote.myReaction == null && defaultStore.state.showStarButton == true && defaultStore.state.showStarAndFavoriteIntegrationButton == false" ref="reactButton" :class="$style.footerButton" class="_button" @click="addStar($event)">
+					<button v-if="appearNote.myReaction == null && defaultStore.state.showStarButton == true && defaultStore.state.showStarAndFavoriteIntegrationButton == false && appearNote.reactionAcceptance !== 'likeOnly'" ref="reactButton" :class="$style.footerButton" class="_button" @click="addStar($event)">
 						<i class="ti ti-star"></i>
 					</button>
-					<button v-if="appearNote.myReaction != null && defaultStore.state.showStarButton == true && defaultStore.state.showStarAndFavoriteIntegrationButton == false" ref="reactButton" :class="$style.footerButton" class="_button" @click="undoStar($event)">
+					<button v-if="appearNote.myReaction != null && defaultStore.state.showStarButton == true && defaultStore.state.showStarAndFavoriteIntegrationButton == false && appearNote.reactionAcceptance !== 'likeOnly'" ref="reactButton" :class="$style.footerButton" class="_button" @click="undoStar($event)">
 						<i class="ti ti-star-off"></i>
 					</button>
 
 					<button v-if="isFavorited == false && defaultStore.state.showFavoriteButton == true && defaultStore.state.showStarAndFavoriteIntegrationButton == false" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite()">
-						<i class="ti ti-bookmark"></i>
+						<i class="ti ti-bookmark-plus"></i>
 					</button>
 					<button v-if="isFavorited == true && defaultStore.state.showFavoriteButton == true && defaultStore.state.showStarAndFavoriteIntegrationButton == false" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite()">
-						<i class="ti ti-bookmark-off"></i>
+						<i class="ti ti-bookmark-minus"></i>
 					</button>
 
-					<button v-if="appearNote.myReaction == null && isFavorited == false && defaultStore.state.showStarButton == false && defaultStore.state.showFavoriteButton == false && defaultStore.state.showStarAndFavoriteIntegrationButton == true" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite(); addStar($event)">
+					<button v-if="appearNote.myReaction == null && isFavorited == false && defaultStore.state.showStarButton == false && defaultStore.state.showFavoriteButton == false && defaultStore.state.showStarAndFavoriteIntegrationButton == true && appearNote.reactionAcceptance !== 'likeOnly'" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite(); addStar($event)">
 						<i class="ti ti-star"></i>
 					</button>
-					<button v-if="appearNote.myReaction != null && isFavorited == true && defaultStore.state.showStarButton == false && defaultStore.state.showFavoriteButton == false && defaultStore.state.showStarAndFavoriteIntegrationButton == true" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite(); undoStar($event)">
+					<button v-if="appearNote.myReaction != null && isFavorited == true && defaultStore.state.showStarButton == false && defaultStore.state.showFavoriteButton == false && defaultStore.state.showStarAndFavoriteIntegrationButton == true && appearNote.reactionAcceptance !== 'likeOnly'" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite(); undoStar($event)">
 						<i class="ti ti-star-off"></i>
 					</button>
 
+					<button v-if="isFavorited == false && defaultStore.state.showFavoriteButton == false && defaultStore.state.showStarAndFavoriteIntegrationButton == true && appearNote.reactionAcceptance === 'likeOnly'" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite()">
+						<i class="ti ti-bookmark-plus"></i>
+					</button>
+					<button v-if="isFavorited == true && defaultStore.state.showFavoriteButton == false && defaultStore.state.showStarAndFavoriteIntegrationButton == true && appearNote.reactionAcceptance === 'likeOnly'" ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleFavorite()">
+						<i class="ti ti-bookmark-minus"></i>
+					</button>
+
 					<button v-if="appearNote.myReaction == null" ref="reactButton" :class="$style.footerButton" class="_button" @mousedown="react()">
-						<i v-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
-						<i v-else class="ti ti-plus"></i>
+						<i v-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart-plus"></i>
+						<i v-else class="ti ti-mood-plus"></i>
 					</button>
 					<button v-if="appearNote.myReaction != null" ref="reactButton" :class="$style.footerButton" class="_button" @click="undoReact(appearNote)">
-						<i class="ti ti-minus"></i>
+						<i v-if="appearNote.myReaction != null && appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart-minus"></i>
+						<i v-else class="ti ti-mood-minus"></i>
 					</button>
 					<button v-if="defaultStore.state.showClipButtonInNoteFooter" ref="clipButton" :class="$style.footerButton" class="_button" @mousedown="clip()">
 						<i class="ti ti-paperclip"></i>
