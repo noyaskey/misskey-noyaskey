@@ -50,6 +50,11 @@ export const packedUserLiteSchema = {
 			type: 'boolean',
 			nullable: false, optional: true,
 		},
+		speakAsCat: {
+			type: "boolean",
+			nullable: false,
+			optional: true,
+		},
 		onlineStatus: {
 			type: 'string',
 			format: 'url',

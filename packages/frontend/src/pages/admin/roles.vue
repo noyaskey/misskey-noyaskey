@@ -35,6 +35,8 @@
 							</MkSwitch>
 						</MkFolder>
 
+						<!--Todo 管理者アカウントの強制フォロー-->
+						
 						<MkFolder v-if="matchQuery([i18n.ts._role._options.canPublicNote, 'canPublicNote'])">
 							<template #label>{{ i18n.ts._role._options.canPublicNote }}</template>
 							<template #suffix>{{ policies.canPublicNote ? i18n.ts.yes : i18n.ts.no }}</template>
