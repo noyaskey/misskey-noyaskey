@@ -11,7 +11,7 @@ import { awaitAll } from '@/misc/prelude/await-all.js';
 import { USER_ACTIVE_THRESHOLD, USER_ONLINE_THRESHOLD } from '@/const.js';
 import type { LocalUser, PartialLocalUser, PartialRemoteUser, RemoteUser, User } from '@/models/entities/User.js';
 import { birthdaySchema, descriptionSchema, localUsernameSchema, locationSchema, nameSchema, passwordSchema } from '@/models/entities/User.js';
-import type { UsersRepository, UserSecurityKeysRepository, FollowingsRepository, FollowRequestsRepository, BlockingsRepository, MutingsRepository, DriveFilesRepository, NoteUnreadsRepository, ChannelFollowingsRepository, UserNotePiningsRepository, UserProfilesRepository, InstancesRepository, AnnouncementReadsRepository, AnnouncementsRepository, PagesRepository, UserProfile, RenoteMutingsRepository, UserMemoRepository } from '@/models/index.js';
+import type { UsersRepository, UserSecurityKeysRepository, FollowingsRepository, FollowRequestsRepository, BlockingsRepository, MutingsRepository, DriveFilesRepository, NoteUnreadsRepository, ChannelFollowingsRepository, UserNotePiningsRepository, UserProfilesRepository, InstancesRepository, AnnouncementReadsRepository, AnnouncementsRepository, PagesRepository, UserProfile, RenoteMutingsRepository, UserMemoRepository, MessagingMessagesRepository, UserGroupJoiningsRepository } from '@/models/index.js';
 import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
 import { ApPersonService } from '@/core/activitypub/models/ApPersonService.js';
@@ -107,6 +107,12 @@ export class UserEntityService implements OnModuleInit {
 
 		@Inject(DI.announcementReadsRepository)
 		private announcementReadsRepository: AnnouncementReadsRepository,
+
+		@Inject(DI.messagingMessagesRepository)
+		private messagingMessagesRepository: MessagingMessagesRepository,
+
+		@Inject(DI.userGroupJoiningsRepository)
+		private userGroupJoiningsRepository: UserGroupJoiningsRepository,
 
 		@Inject(DI.announcementsRepository)
 		private announcementsRepository: AnnouncementsRepository,
@@ -212,6 +218,36 @@ export class UserEntityService implements OnModuleInit {
 		});
 	}
 
+	@bindThis
+	public async getHasUnreadMessagingMessage(userId: User['id']): Promise<boolean> {
+		const mute = await this.mutingsRepository.findBy({
+			muterId: userId,
+		});
+
+		const joinings = await this.userGroupJoiningsRepository.findBy({ userId: userId });
+
+		const groupQs = Promise.all(joinings.map(j => this.messagingMessagesRepository.createQueryBuilder('message')
+			.where('message.groupId = :groupId', { groupId: j.userGroupId })
+			.andWhere('message.userId != :userId', { userId: userId })
+			.andWhere('NOT (:userId = ANY(message.reads))', { userId: userId })
+			.andWhere('message.createdAt > :joinedAt', { joinedAt: j.createdAt }) // 自分が加入する前の会話については、未読扱いしない
+			.getOne().then(x => x != null)));
+
+		const [withUser, withGroups] = await Promise.all([
+			this.messagingMessagesRepository.count({
+				where: {
+					recipientId: userId,
+					isRead: false,
+					...(mute.length > 0 ? { userId: Not(In(mute.map(x => x.muteeId))) } : {}),
+				},
+				take: 1,
+			}).then(count => count > 0),
+			groupQs,
+		]);
+
+		return withUser || withGroups.some(x => x);
+	}
+	
 	@bindThis
 	public async getHasUnreadAnnouncement(userId: User['id']): Promise<boolean> {
 		const reads = await this.announcementReadsRepository.findBy({

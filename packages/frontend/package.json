@@ -139,5 +139,8 @@
 		"vitest-fetch-mock": "0.2.2",
 		"vue-eslint-parser": "9.3.1",
 		"vue-tsc": "1.8.1"
+	},
+	"rules": {
+		"no-console": 0
 	}
 }

@@ -87,6 +87,12 @@
 					<MkButton :class="$style.followRequestCommandButton" rounded danger @click="rejectFollowRequest()"><i class="ti ti-x"/> {{ i18n.ts.reject }}</MkButton>
 				</div>
 			</template>
+			<template v-else-if="notification.type === 'groupInvited'">
+				<span :class="$style.text" style="opacity: 0.6;">{{ i18n.ts.groupInvited }}: <b>{{ notification.invitation.group.name }}</b></span>
+				<div v-if="full && !groupInviteDone">
+					<button class="_textButton" @click="acceptGroupInvitation()">{{ i18n.ts.accept }}</button> | <button class="_textButton" @click="rejectGroupInvitation()">{{ i18n.ts.reject }}</button>
+				</div>
+			</template>
 			<span v-else-if="notification.type === 'app'" :class="$style.text">
 				<Mfm :text="notification.body" :nowrap="false"/>
 			</span>
@@ -123,6 +129,7 @@ const elRef = shallowRef<HTMLElement>(null);
 const reactionRef = ref(null);
 
 const followRequestDone = ref(false);
+const groupInviteDone = ref(false);
 
 const acceptFollowRequest = () => {
 	followRequestDone.value = true;
@@ -132,6 +139,15 @@ const acceptFollowRequest = () => {
 const rejectFollowRequest = () => {
 	followRequestDone.value = true;
 	os.api('following/requests/reject', { userId: props.notification.user.id });
+};
+
+const acceptGroupInvitation = () => {
+	groupInviteDone.value = true;
+	os.apiWithDialog('users/groups/invitations/accept', { invitationId: props.notification.invitation.id });
+};
+const rejectGroupInvitation = () => {
+	groupInviteDone.value = true;
+	os.api('users/groups/invitations/reject', { invitationId: props.notification.invitation.id });
 };
 
 useTooltip(reactionRef, (showing) => {
@@ -191,7 +207,7 @@ useTooltip(reactionRef, (showing) => {
 	}
 }
 
-.t_follow, .t_followRequestAccepted, .t_receiveFollowRequest{
+.t_follow, .t_followRequestAccepted, .t_receiveFollowRequest, .t_groupInvited {
 	padding: 3px;
 	background: #36aed2;
 	pointer-events: none;

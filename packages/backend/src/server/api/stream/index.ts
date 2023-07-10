@@ -1,5 +1,6 @@
 import * as WebSocket from 'ws';
 import type { User } from '@/models/entities/User.js';
+import type { Channel as ChannelModel } from '@/models/entities/Channel.js';
 import type { AccessToken } from '@/models/entities/AccessToken.js';
 import type { Packed } from '@/misc/json-schema.js';
 import type { NoteReadService } from '@/core/NoteReadService.js';
@@ -7,10 +8,12 @@ import type { NotificationService } from '@/core/NotificationService.js';
 import { bindThis } from '@/decorators.js';
 import { CacheService } from '@/core/CacheService.js';
 import { UserProfile } from '@/models/index.js';
+import type { UserGroup } from '@/models/entities/UserGroup.js';
 import type { ChannelsService } from './ChannelsService.js';
 import type { EventEmitter } from 'events';
 import type Channel from './channel.js';
 import type { StreamEventEmitter, StreamMessages } from './types.js';
+import type { GlobalEventService } from '@/core/GlobalEventService.js';
 
 /**
  * Main stream connection
@@ -33,6 +36,7 @@ export default class Connection {
 
 	constructor(
 		private channelsService: ChannelsService,
+		private globalEventService: GlobalEventService,
 		private noteReadService: NoteReadService,
 		private notificationService: NotificationService,
 		private cacheService: CacheService,
@@ -112,6 +116,8 @@ export default class Connection {
 			case 'disconnect': this.onChannelDisconnectRequested(body); break;
 			case 'channel': this.onChannelMessageRequested(body); break;
 			case 'ch': this.onChannelMessageRequested(body); break; // alias
+			case 'typingOnChannel': this.typingOnChannel(body.channel); break;
+			case 'typingOnMessaging': this.typingOnMessaging(body); break;
 		}
 	}
 
@@ -277,6 +283,24 @@ export default class Connection {
 		const channel = this.channels.find(c => c.id === data.id);
 		if (channel != null && channel.onMessage != null) {
 			channel.onMessage(data.type, data.body);
+		}
+	}
+
+	@bindThis
+	private typingOnChannel(channel: ChannelModel['id']) {
+		if (this.user) {
+			this.globalEventService.publishChannelStream(channel, 'typing', this.user.id);
+		}
+	}
+
+	@bindThis
+	private typingOnMessaging(param: { partner?: User['id']; group?: UserGroup['id']; }) {
+		if (this.user) {
+			if (param.partner) {
+				this.globalEventService.publishMessagingStream(param.partner, this.user.id, 'typing', this.user.id);
+			} else if (param.group) {
+				this.globalEventService.publishGroupMessagingStream(param.group, 'typing', this.user.id);
+			}
 		}
 	}
 

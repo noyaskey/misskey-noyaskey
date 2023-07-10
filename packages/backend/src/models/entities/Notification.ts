@@ -2,6 +2,7 @@ import { notificationTypes } from '@/types.js';
 import { User } from './User.js';
 import { Note } from './Note.js';
 import { FollowRequest } from './FollowRequest.js';
+import { UserGroupInvitation } from './UserGroupInvitation.js';
 import { AccessToken } from './AccessToken.js';
 
 export type Notification = {
@@ -34,6 +35,8 @@ export type Notification = {
 	noteId: Note['id'] | null;
 
 	followRequestId: FollowRequest['id'] | null;
+
+	userGroupInvitationId: UserGroupInvitation['id'] | null;
 
 	reaction: string | null;
 
