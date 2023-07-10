@@ -91,6 +91,8 @@ const {
 
 let pagination: Paging | null = $ref(null);
 
+const stream = useStream();
+
 watch([() => props.userAcct, () => props.groupId], () => {
 	if (connection) connection.dispose();
 	fetch();
@@ -113,7 +115,7 @@ async function fetch() {
 			reversed: false,
 			pageEl: $$(rootEl).value,
 		};
-		connection = useStream().useChannel('messaging', {
+		connection = stream.useChannel('messaging', {
 			otherparty: user.id,
 		});
 	} else {
@@ -129,7 +131,7 @@ async function fetch() {
 			reversed: false,
 			pageEl: $$(rootEl).value,
 		};
-		connection = useStream().useChannel('messaging', {
+		connection = stream.useChannel('messaging', {
 			group: group?.id,
 		});
 	}
