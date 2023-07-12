@@ -24,6 +24,7 @@ import type { Config } from '@/config.js';
 import Logger from '../logger.js';
 import { IsNull } from 'typeorm';
 import { AccountMoveService } from '@/core/AccountMoveService.js';
+import { ApiCallService } from '@/server/api/ApiCallService.js';
 
 const logger = new Logger('following/create');
 
@@ -153,6 +154,13 @@ export class UserFollowingService implements OnModuleInit {
 					true,
 				));
 			}
+
+			//TODO: フォロワーがisRootなアカウントかつ、フォロー対象がローカルユーザーであればisLockedであってもフォローリクエストを貫通(autoAccept)する
+			if (follower.isRoot && (this.userEntityService.isLocalUser(followee) && followee.isLocked)) {
+				autoAccept = true;
+			}
+
+			//TODO: フォロワーがisRootなアカウントである場合、フォロー対象がisLockedであってもフォローリクエストを貫通する ←　邪悪すぎるので削除
 
 			if (!autoAccept) {
 				await this.createFollowRequest(follower, followee, requestId);
