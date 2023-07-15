@@ -38,7 +38,8 @@ import * as ep___admin_federation_updateInstance from './endpoints/admin/federat
 import * as ep___admin_getIndexStats from './endpoints/admin/get-index-stats.js';
 import * as ep___admin_getTableStats from './endpoints/admin/get-table-stats.js';
 import * as ep___admin_getUserIps from './endpoints/admin/get-user-ips.js';
-import * as ep___invite from './endpoints/invite.js';
+import * as ep___admin_invite_create from './endpoints/admin/invite/create.js';
+import * as ep___admin_invite_list from './endpoints/admin/invite/list.js';
 import * as ep___admin_promo_create from './endpoints/admin/promo/create.js';
 import * as ep___admin_queue_clear from './endpoints/admin/queue/clear.js';
 import * as ep___admin_queue_deliverDelayed from './endpoints/admin/queue/deliver-delayed.js';
@@ -237,6 +238,10 @@ import * as ep___messaging_messages from './endpoints/messaging/messages.js';
 import * as ep___messaging_messages_create from './endpoints/messaging/messages/create.js';
 import * as ep___messaging_messages_delete from './endpoints/messaging/messages/delete.js';
 import * as ep___messaging_messages_read from './endpoints/messaging/messages/read.js';
+import * as ep___invite_create from './endpoints/invite/create.js';
+import * as ep___invite_delete from './endpoints/invite/delete.js';
+import * as ep___invite_list from './endpoints/invite/list.js';
+import * as ep___invite_limit from './endpoints/invite/limit.js';
 import * as ep___meta from './endpoints/meta.js';
 import * as ep___emojis from './endpoints/emojis.js';
 import * as ep___emoji from './endpoints/emoji.js';
@@ -395,7 +400,8 @@ const eps = [
 	['admin/get-index-stats', ep___admin_getIndexStats],
 	['admin/get-table-stats', ep___admin_getTableStats],
 	['admin/get-user-ips', ep___admin_getUserIps],
-	['invite', ep___invite],
+	['admin/invite/create', ep___admin_invite_create],
+	['admin/invite/list', ep___admin_invite_list],
 	['admin/promo/create', ep___admin_promo_create],
 	['admin/queue/clear', ep___admin_queue_clear],
 	['admin/queue/deliver-delayed', ep___admin_queue_deliverDelayed],
@@ -594,6 +600,10 @@ const eps = [
 	['messaging/messages/create', ep___messaging_messages_create],
 	['messaging/messages/delete', ep___messaging_messages_delete],
 	['messaging/messages/read', ep___messaging_messages_read],
+	['invite/create', ep___invite_create],
+	['invite/delete', ep___invite_delete],
+	['invite/list', ep___invite_list],
+	['invite/limit', ep___invite_limit],
 	['meta', ep___meta],
 	['emojis', ep___emojis],
 	['emoji', ep___emoji],
