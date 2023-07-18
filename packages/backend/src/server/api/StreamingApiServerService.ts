@@ -36,6 +36,7 @@ export class StreamingApiServerService {
 		private noteReadService: NoteReadService,
 		private authenticateService: AuthenticateService,
 		private channelsService: ChannelsService,
+		private globalEventService: GlobalEventService,
 		private notificationService: NotificationService,
 	) {
 	}
@@ -88,6 +89,7 @@ export class StreamingApiServerService {
 
 			const stream = new MainStreamConnection(
 				this.channelsService,
+				this.globalEventService,
 				this.noteReadService,
 				this.notificationService,
 				this.cacheService,

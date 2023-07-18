@@ -55,11 +55,11 @@ import { definePageMetadata } from '@/scripts/page-metadata';
 import { $i } from '@/account';
 
 const router = useRouter();
+const connection = markRaw(useStream().useChannel('messaging'));
 
 let fetching = $ref(true);
 let moreFetching = $ref(false);
 let messages = $ref([]);
-let connection = $ref(null);
 
 const getAcct = Acct.toString;
 
@@ -133,7 +133,6 @@ async function startGroup() {
 }
 
 onMounted(() => {
-	connection = markRaw(useStream().useChannel('messagingIndex'));
 
 	connection.on('message', onMessage);
 	connection.on('read', onRead);
