@@ -110,11 +110,11 @@
 					>
 						<i class="ti ti-quote"></i>
 					</button>
-					<button v-if="appearNote.text && defaultStore.state.numberQuoteEnabled == true" ref="stealButton" :class="$style.footerButton" class="_button" @mousedown="stealMenu(appearNote, stealButton)">
-					<i class="ti ti-swipe"></i>
-					</button>
 					<button v-else :class="$style.footerButton" class="_button" disabled>
 						<i class="ti ti-ban"></i>
+					</button>
+					<button v-if="appearNote.text && defaultStore.state.numberQuoteEnabled == true" ref="stealButton" :class="$style.footerButton" class="_button" @mousedown="stealMenu(appearNote, stealButton)">
+					<i class="ti ti-swipe"></i>
 					</button>
 					<button v-if="appearNote.myReaction == null && defaultStore.state.showStarButton == true && defaultStore.state.showStarAndFavoriteIntegrationButton == false && appearNote.reactionAcceptance !== 'likeOnly'" ref="reactButton" :class="$style.footerButton" class="_button" @click="addStar($event)">
 						<i class="ti ti-star"></i>
