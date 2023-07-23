@@ -1,5 +1,5 @@
 import { Entity, Column, Index, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
-import { obsoleteNotificationTypes, ffVisibility, notificationTypes } from '@/types.js';
+import { obsoleteNotificationTypes, ffVisibility, notificationTypes, notesCountVisibility } from '@/types.js';
 import { id } from '../id.js';
 import { User } from './User.js';
 import { Page } from './Page.js';
@@ -85,6 +85,12 @@ export class UserProfile {
 		default: 'public',
 	})
 	public ffVisibility: typeof ffVisibility[number];
+
+	@Column('enum', {
+		enum: notesCountVisibility,
+		default: 'public',
+	})
+	public notesCountVisibility: typeof notesCountVisibility[number];
 
 	@Column('varchar', {
 		length: 128, nullable: true,

@@ -22,6 +22,7 @@ import type { CustomEmojiService } from '../CustomEmojiService.js';
 import type { NoteEntityService } from './NoteEntityService.js';
 import type { DriveFileEntityService } from './DriveFileEntityService.js';
 import type { PageEntityService } from './PageEntityService.js';
+import { notesCountVisibility } from '@/types.js';
 
 type IsUserDetailed<Detailed extends boolean> = Detailed extends true ? Packed<'UserDetailed'> : Packed<'UserLite'>;
 type IsMeAndIsUserDetailed<ExpectsMe extends boolean | null, Detailed extends boolean> =
@@ -386,6 +387,11 @@ export class UserEntityService implements OnModuleInit {
 		const isModerator = isMe && opts.detail ? this.roleService.isModerator(user) : null;
 		const isAdmin = isMe && opts.detail ? this.roleService.isAdministrator(user) : null;
 
+		const notesCount = profile == null ? null :
+		(profile.notesCountVisibility === 'public') || isMe ? user.notesCount :
+		(profile.notesCountVisibility === 'followers') && (relation && relation.isFollowing) ? user.notesCount :
+		null;
+
 		const falsy = opts.detail ? false : undefined;
 
 		const packed = {
@@ -438,7 +444,7 @@ export class UserEntityService implements OnModuleInit {
 				fields: profile!.fields,
 				followersCount: followersCount ?? 0,
 				followingCount: followingCount ?? 0,
-				notesCount: user.notesCount,
+				notesCount: notesCount ?? 0,
 				pinnedNoteIds: pins.map(pin => pin.noteId),
 				pinnedNotes: this.noteEntityService.packMany(pins.map(pin => pin.note!), me, {
 					detail: true,
@@ -447,6 +453,7 @@ export class UserEntityService implements OnModuleInit {
 				pinnedPage: profile!.pinnedPageId ? this.pageEntityService.pack(profile!.pinnedPageId, me) : null,
 				publicReactions: profile!.publicReactions,
 				ffVisibility: profile!.ffVisibility,
+				notesCountVisibility: profile!.notesCountVisibility,
 				twoFactorEnabled: profile!.twoFactorEnabled,
 				usePasswordLessLogin: profile!.usePasswordLessLogin,
 				securityKeys: profile!.twoFactorEnabled

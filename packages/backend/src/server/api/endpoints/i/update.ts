@@ -150,6 +150,7 @@ export const paramDef = {
 		alwaysMarkNsfw: { type: 'boolean' },
 		autoSensitive: { type: 'boolean' },
 		ffVisibility: { type: 'string', enum: ['public', 'followers', 'private'] },
+		notesCountVisibility: { type: 'string', enum: ['public', 'followers', 'private'] },
 		pinnedPageId: { type: 'string', format: 'misskey:id', nullable: true },
 		mutedWords: { type: 'array' },
 		mutedInstances: { type: 'array', items: {
@@ -213,6 +214,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 			if (ps.location !== undefined) profileUpdates.location = ps.location;
 			if (ps.birthday !== undefined) profileUpdates.birthday = ps.birthday;
 			if (ps.ffVisibility !== undefined) profileUpdates.ffVisibility = ps.ffVisibility;
+			if (ps.notesCountVisibility !== undefined) profileUpdates.notesCountVisibility = ps.notesCountVisibility;
 			if (ps.mutedWords !== undefined) {
 				// TODO: ちゃんと数える
 				const length = JSON.stringify(ps.mutedWords).length;

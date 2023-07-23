@@ -20,6 +20,15 @@
 		<option value="private">{{ i18n.ts._ffVisibility.private }}</option>
 		<template #caption>{{ i18n.ts.ffVisibilityDescription }}</template>
 	</MkSelect>
+
+	<MkSelect v-model="notesCountVisibility" class="_formBlock" @update:modelValue="save()">
+		<template #label>{{ i18n.ts.notesCountVisibility }}</template>
+		<option value="public">{{ i18n.ts._ffVisibility.public }}</option>
+		<option value="followers">{{ i18n.ts._ffVisibility.followers }}</option>
+		<option value="private">{{i18n.ts._ffVisibility.private }}</option>
+		<template #caption>{{ i18n.ts.notesCountVisibilityDescription }}</template>
+	</MkSelect>
+
 		
 	<MkSwitch v-model="hideOnlineStatus" @update:modelValue="save()">
 		{{ i18n.ts.hideOnlineStatus }}
@@ -89,6 +98,7 @@ let isExplorable = $ref($i.isExplorable);
 let hideOnlineStatus = $ref($i.hideOnlineStatus);
 let publicReactions = $ref($i.publicReactions);
 let ffVisibility = $ref($i.ffVisibility);
+let notesCountVisibility = $ref($i.notesCountVisibility);
 
 let defaultNoteVisibility = $computed(defaultStore.makeGetterSetter('defaultNoteVisibility'));
 let defaultNoteLocalOnly = $computed(defaultStore.makeGetterSetter('defaultNoteLocalOnly'));
@@ -109,6 +119,7 @@ function save() {
 		hideOnlineStatus: !!hideOnlineStatus,
 		publicReactions: !!publicReactions,
 		ffVisibility: ffVisibility,
+		notesCountVisibility: notesCountVisibility,
 	});
 }
 

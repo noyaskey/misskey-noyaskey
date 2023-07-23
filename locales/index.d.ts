@@ -2171,6 +2171,8 @@ export interface Locale {
     "flagCarefulRemote": string;
     "flagCarefulBot": string;
     "flagCarefulMassive": string;
+    "notesCountVisibility": string;
+    "notesCountVisibilityDescription": string;
 }
 declare const locales: {
     [lang: string]: Locale;
