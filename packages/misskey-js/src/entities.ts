@@ -84,8 +84,11 @@ export type MeDetailed = UserDetailed & {
 	avatarId: DriveFile['id'];
 	bannerId: DriveFile['id'];
 	autoAcceptFollowed: boolean;
+	allowFollow: boolean;
 	alwaysMarkNsfw: boolean;
 	carefulBot: boolean;
+	carefulRemote: boolean;
+	carefulMassive: boolean;
 	emailNotificationTypes: string[];
 	hasPendingReceivedFollowRequest: boolean;
 	hasUnreadAnnouncement: boolean;

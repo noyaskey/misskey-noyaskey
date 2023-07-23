@@ -2080,3 +2080,8 @@ _webhookSettings:
     renote: "Renoteされたとき"
     reaction: "リアクションがあったとき"
     mention: "メンションされたとき"
+
+allowFollow: "フォローを許可する"
+flagCarefulRemote: "リモートからのフォローを承認制にする"
+flagCarefulBot: "Botからのフォローを承認制にする"
+flagCarefulMassive: "大量フォローアカウントからのフォローを承認制にする"

@@ -142,6 +142,11 @@ export class UserProfile {
 	public autoAcceptFollowed: boolean;
 
 	@Column('boolean', {
+		default: true,
+	})
+	public allowFollow: boolean;
+
+	@Column('boolean', {
 		default: false,
 		comment: 'Whether reject index by crawler.',
 	})
@@ -166,6 +171,16 @@ export class UserProfile {
 		default: false,
 	})
 	public carefulBot: boolean;
+
+	@Column('boolean', {
+		default: false,
+	})
+	public carefulRemote: boolean;
+
+	@Column('boolean', {
+		default: false,
+	})
+	public carefulMassive: boolean;
 
 	@Column('boolean', {
 		default: true,

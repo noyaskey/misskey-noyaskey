@@ -136,7 +136,10 @@ export const paramDef = {
 		hideOnlineStatus: { type: 'boolean' },
 		publicReactions: { type: 'boolean' },
 		carefulBot: { type: 'boolean' },
+		carefulRemote: { type: 'boolean' },
+		carefulMassive: { type: 'boolean' },
 		autoAcceptFollowed: { type: 'boolean' },
+		allowFollow: { type: 'boolean' },
 		noCrawle: { type: 'boolean' },
 		preventAiLearning: { type: 'boolean' },
 		isBot: { type: 'boolean' },
@@ -240,7 +243,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 			if (typeof ps.publicReactions === 'boolean') profileUpdates.publicReactions = ps.publicReactions;
 			if (typeof ps.isBot === 'boolean') updates.isBot = ps.isBot;
 			if (typeof ps.carefulBot === 'boolean') profileUpdates.carefulBot = ps.carefulBot;
+			if (typeof ps.carefulRemote === 'boolean') profileUpdates.carefulRemote = ps.carefulRemote;
+			if (typeof ps.carefulMassive === 'boolean') profileUpdates.carefulMassive = ps.carefulMassive;
 			if (typeof ps.autoAcceptFollowed === 'boolean') profileUpdates.autoAcceptFollowed = ps.autoAcceptFollowed;
+			if (typeof ps.allowFollow === 'boolean') profileUpdates.allowFollow = ps.allowFollow;
 			if (typeof ps.noCrawle === 'boolean') profileUpdates.noCrawle = ps.noCrawle;
 			if (typeof ps.preventAiLearning === 'boolean') profileUpdates.preventAiLearning = ps.preventAiLearning;
 			if (typeof ps.isCat === 'boolean') updates.isCat = ps.isCat;
@@ -379,10 +385,20 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 			this.globalEventService.publishMainStream(user.id, 'meUpdated', iObj);
 
 			// 鍵垢を解除したとき、溜まっていたフォローリクエストがあるならすべて承認
+			/*
 			if (user.isLocked && ps.isLocked === false) {
 				this.userFollowingService.acceptAllFollowRequests(user);
 			}
-
+			if (profile.carefulBot && ps.carefulBot === false) {
+				this.userFollowingService.acceptAllFollowRequests(user);
+			}
+			if (profile.carefulRemote && ps.carefulRemote === false) {
+				this.userFollowingService.acceptAllFollowRequests(user);
+			}
+			if (profile.carefulMassive && ps.carefulMassive === false) {
+				this.userFollowingService.acceptAllFollowRequests(user);
+			}
+			*/
 			// フォロワーにUpdateを配信
 			this.accountUpdateService.publishToFollowers(user.id);
 

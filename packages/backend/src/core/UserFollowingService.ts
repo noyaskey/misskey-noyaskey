@@ -119,7 +119,11 @@ export class UserFollowingService implements OnModuleInit {
 		// フォロワーがBotであり、フォロー対象がBotからのフォローに慎重である or
 		// フォロワーがローカルユーザーであり、フォロー対象がリモートユーザーである
 		// 上記のいずれかに当てはまる場合はすぐフォローせずにフォローリクエストを発行しておく
-		if (followee.isLocked || (followeeProfile.carefulBot && follower.isBot) || (this.userEntityService.isLocalUser(follower) && this.userEntityService.isRemoteUser(followee))) {
+		if (!followeeProfile.allowFollow || followee.isLocked 
+			|| (followeeProfile.carefulBot && follower.isBot) 
+			|| (followeeProfile.carefulRemote && this.userEntityService.isRemoteUser(follower))
+			|| (followeeProfile.carefulMassive && follower.followingCount > 5000 && (follower.followingCount / follower.followersCount) > 10)
+			|| (this.userEntityService.isLocalUser(follower) && this.userEntityService.isRemoteUser(followee))) {
 			let autoAccept = false;
 
 			// 鍵アカウントであっても、既にフォローされていた場合はスルー
@@ -161,6 +165,17 @@ export class UserFollowingService implements OnModuleInit {
 			}
 
 			//TODO: フォロワーがisRootなアカウントである場合、フォロー対象がisLockedであってもフォローリクエストを貫通する ←　邪悪すぎるので削除
+
+			if (!autoAccept && this.userEntityService.isLocalUser(followee) && !followeeProfile.allowFollow) {
+				if (this.userEntityService.isRemoteUser(follower) && this.userEntityService.isLocalUser(followee)) {
+					const content = this.apRendererService.addContext(this.apRendererService.renderReject(this.apRendererService.renderFollow(follower, followee, requestId), followee));
+					this.queueService.deliver(followee , content, follower.inbox, false);
+					return;
+				} else {
+					throw new IdentifiableError('3338392a-f764-498d-8855-db939dcf8c48', 'blocked');
+					return;
+				}
+			}
 
 			if (!autoAccept) {
 				await this.createFollowRequest(follower, followee, requestId);

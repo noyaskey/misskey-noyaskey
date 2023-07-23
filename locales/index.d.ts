@@ -2167,6 +2167,10 @@ export interface Locale {
             "mention": string;
         };
     };
+    "allowFollow": string;
+    "flagCarefulRemote": string;
+    "flagCarefulBot": string;
+    "flagCarefulMassive": string;
 }
 declare const locales: {
     [lang: string]: Locale;

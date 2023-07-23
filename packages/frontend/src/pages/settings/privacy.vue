@@ -1,7 +1,12 @@
 <template>
 <div class="_gaps_m">
-	<MkSwitch v-model="isLocked" @update:modelValue="save()">{{ i18n.ts.makeFollowManuallyApprove }}<template #caption>{{ i18n.ts.lockedAccountInfo }}</template></MkSwitch>
-	<MkSwitch v-if="isLocked" v-model="autoAcceptFollowed" @update:modelValue="save()">{{ i18n.ts.autoAcceptFollowed }}</MkSwitch>
+	<MkSwitch v-model="allowFollow" class="_formBlock" @update:modelValue="save()">{{ i18n.ts.allowFollow }}</MkSwitch>
+	<MkSwitch v-if="allowFollow || !carefulRemote && !carefulBot && !carefulMassive" v-model="isLocked" @update:modelValue="save()">{{ i18n.ts.makeFollowManuallyApprove }}<template #caption>{{ i18n.ts.lockedAccountInfo }}</template></MkSwitch>
+	<MkSwitch v-if="isLocked" v-model="autoAcceptFollowed" @update:modelValue="save()">{{ i18n.ts.autoAcceptFollowed }}</MkSwitch>	<MkSwitch v-if="!isLocked" v-model="carefulRemote" @update:model-value="save()">{{ i18n.ts.flagCarefulRemote }}<template #caption>{{ i18n.ts.carefulRemoteInfo }}</template></MkSwitch>
+	<MkSwitch v-if="!isLocked" v-model="carefulBot" @update:model-value="save()">{{ i18n.ts.flagCarefulBot }}<template #caption>{{ i18n.ts.carefulBotInfo }}</template></MkSwitch>
+	<MkSwitch v-if="!isLocked" v-model="carefulMassive" @update:model-value="save()">{{ i18n.ts.flagCarefulMassive }}<template #caption>{{ i18n.ts.carefulMassiveInfo}}</template></MkSwitch>
+	<MkSwitch v-if="isLocked || carefulRemote || carefulBot || carefulMassive" v-model="autoAcceptFollowed" @update:model-value="save()">{{ i18n.ts.autoAcceptFollowed }}</MkSwitch>
+
 
 	<MkSwitch v-model="publicReactions" @update:modelValue="save()">
 		{{ i18n.ts.makeReactionsPublic }}
@@ -74,6 +79,10 @@ import { definePageMetadata } from '@/scripts/page-metadata';
 
 let isLocked = $ref($i.isLocked);
 let autoAcceptFollowed = $ref($i.autoAcceptFollowed);
+let allowFollow = $ref($i.allowFollow);
+let carefulBot = $ref($i.carefulBot);
+let carefulRemote = $ref($i.carefulRemote);
+let carefulMassive = $ref($i.carefulMassive);
 let noCrawle = $ref($i.noCrawle);
 let preventAiLearning = $ref($i.preventAiLearning);
 let isExplorable = $ref($i.isExplorable);
@@ -90,6 +99,10 @@ function save() {
 	os.api('i/update', {
 		isLocked: !!isLocked,
 		autoAcceptFollowed: !!autoAcceptFollowed,
+		allowFollow: !!allowFollow,
+		carefulBot: !!carefulBot,
+		carefulRemote: !!carefulRemote,
+		carefulMassive: !!carefulMassive,
 		noCrawle: !!noCrawle,
 		preventAiLearning: !!preventAiLearning,
 		isExplorable: !!isExplorable,
