@@ -49,6 +49,7 @@ globalThis.addEventListener('push', ev => {
 		switch (data.type) {
 			// case 'driveFileCreated':
 			case 'notification':
+			case 'unreadMessagingMessage':
 			case 'unreadAntennaNote':
 				// 1日以上経過している場合は無視
 				if ((new Date()).getTime() - data.dateTime > 1000 * 60 * 60 * 24) break;
@@ -96,12 +97,18 @@ globalThis.addEventListener('notificationclick', (ev: ServiceWorkerGlobalScopeEv
 							case 'receiveFollowRequest':
 								await swos.api('following/requests/accept', loginId, { userId: data.body.userId });
 								break;
+							case 'groupInvited':
+								await swos.api('users/groups/invitations/accept', loginId, { invitationId: data.body.invitation.id });
+								break;
 						}
 						break;
 					case 'reject':
 						switch (data.body.type) {
 							case 'receiveFollowRequest':
 								await swos.api('following/requests/reject', loginId, { userId: data.body.userId });
+								break;
+							case 'groupInvited':
+								await swos.api('users/groups/invitations/reject', loginId, { invitationId: data.body.invitation.id });
 								break;
 						}
 						break;
@@ -112,6 +119,9 @@ globalThis.addEventListener('notificationclick', (ev: ServiceWorkerGlobalScopeEv
 						switch (data.body.type) {
 							case 'receiveFollowRequest':
 								client = await swos.openClient('push', '/my/follow-requests', loginId);
+								break;
+							case 'groupInvited':
+								client = await swos.openClient('push', '/my/groups', loginId);
 								break;
 							case 'reaction':
 								client = await swos.openNote(data.body.note.id, loginId);
@@ -125,6 +135,25 @@ globalThis.addEventListener('notificationclick', (ev: ServiceWorkerGlobalScopeEv
 								break;
 						}
 				}
+				break;
+			case 'readAllMessagingMessages':
+				for (const n of await self.registration.getNotifications()) {
+					if (n?.data?.type === 'unreadMessagingMessage') n.close();
+				}
+				break;
+			case 'readAllMessagingMessagesOfARoom':
+				for (const n of await self.registration.getNotifications()) {
+					if (n.data.type === 'unreadMessagingMessage'
+						&& ('userId' in data.body
+							? data.body.userId === n.data.body.userId
+							: data.body.groupId === n.data.body.groupId)
+						) {
+							n.close();
+						}
+				}
+				break;
+			case 'unreadMessagingMessage':
+				client = await swos.openChat(data.body, loginId);
 				break;
 			case 'unreadAntennaNote':
 				client = await swos.openAntenna(data.body.antenna.id, loginId);

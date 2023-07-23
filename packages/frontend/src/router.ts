@@ -206,6 +206,10 @@ export const routes = [{
 	path: '/about-misskey',
 	component: page(() => import('./pages/about-misskey.vue')),
 }, {
+	path: '/invite',
+	name: 'invite',
+	component: page(() => import('./pages/invite.vue')),
+}, {
 	path: '/ads',
 	component: page(() => import('./pages/ads.vue')),
 }, {
@@ -433,6 +437,10 @@ export const routes = [{
 		name: 'server-rules',
 		component: page(() => import('./pages/admin/server-rules.vue')),
 	}, {
+		path: '/invites',
+		name: 'invites',
+		component: page(() => import('./pages/admin/invites.vue')),
+	}, {
 		path: '/',
 		component: page(() => import('./pages/_empty_.vue')),
 	}],
@@ -447,6 +455,19 @@ export const routes = [{
 }, {
 	path: '/my/achievements',
 	component: page(() => import('./pages/achievements.vue')),
+	loginRequired: true,
+}, {
+	name: 'messaging',
+	path: '/my/messaging',
+	component: page(() => import('./pages/messaging/index.vue')),
+	loginRequired: true,
+}, {
+	path: '/my/messaging/:userAcct',
+	component: page(() => import('./pages/messaging/messaging-room.vue')),
+	loginRequired: true,
+}, {
+	path: '/my/messaging/group/:groupId',
+	component: page(() => import('./pages/messaging/messaging-room.vue')),
 	loginRequired: true,
 }, {
 	path: '/my/drive/folder/:folder',

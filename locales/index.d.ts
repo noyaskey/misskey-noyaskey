@@ -1085,6 +1085,24 @@ export interface Locale {
     "branding": string;
     "enableServerMachineStats": string;
     "enableIdenticonGeneration": string;
+    "turnOffToImprovePerformance": string;
+    "createInviteCode": string;
+    "createWithOptions": string;
+    "createCount": string;
+    "inviteCodeCreated": string;
+    "inviteLimitExceeded": string;
+    "createLimitRemaining": string;
+    "inviteLimitResetCycle": string;
+    "expirationDate": string;
+    "noExpirationDate": string;
+    "inviteCodeUsedAt": string;
+    "registeredUserUsingInviteCode": string;
+    "waitingForMailAuth": string;
+    "inviteCodeCreator": string;
+    "usedAt": string;
+    "unused": string;
+    "used": string;
+    "expired": string;
     "_initialAccountSetting": {
         "accountCreated": string;
         "letsStartAccountSetup": string;
@@ -1475,6 +1493,9 @@ export interface Locale {
             "ltlAvailable": string;
             "canPublicNote": string;
             "canInvite": string;
+            "inviteLimit": string;
+            "inviteLimitCycle": string;
+            "inviteExpirationTime": string;
             "canManageCustomEmojis": string;
             "driveCapacity": string;
             "alwaysMarkNsfw": string;
@@ -2167,6 +2188,12 @@ export interface Locale {
             "mention": string;
         };
     };
+    "allowFollow": string;
+    "flagCarefulRemote": string;
+    "flagCarefulBot": string;
+    "flagCarefulMassive": string;
+    "notesCountVisibility": string;
+    "notesCountVisibilityDescription": string;
 }
 declare const locales: {
     [lang: string]: Locale;

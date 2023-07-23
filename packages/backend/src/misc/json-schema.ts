@@ -10,6 +10,7 @@ import {
 import { packedNoteSchema } from '@/models/json-schema/note.js';
 import { packedUserListSchema } from '@/models/json-schema/user-list.js';
 import { packedAppSchema } from '@/models/json-schema/app.js';
+import { packedMessagingMessageSchema } from '@/models/json-schema/messaging-message.js';
 import { packedNotificationSchema } from '@/models/json-schema/notification.js';
 import { packedDriveFileSchema } from '@/models/json-schema/drive-file.js';
 import { packedDriveFolderSchema } from '@/models/json-schema/drive-folder.js';
@@ -19,7 +20,9 @@ import { packedRenoteMutingSchema } from '@/models/json-schema/renote-muting.js'
 import { packedBlockingSchema } from '@/models/json-schema/blocking.js';
 import { packedNoteReactionSchema } from '@/models/json-schema/note-reaction.js';
 import { packedHashtagSchema } from '@/models/json-schema/hashtag.js';
+import { packedInviteCodeSchema } from '@/models/json-schema/invite-code.js';
 import { packedPageSchema } from '@/models/json-schema/page.js';
+import { packedUserGroupSchema } from '@/models/json-schema/user-group.js';
 import { packedNoteFavoriteSchema } from '@/models/json-schema/note-favorite.js';
 import { packedChannelSchema } from '@/models/json-schema/channel.js';
 import { packedAntennaSchema } from '@/models/json-schema/antenna.js';
@@ -40,7 +43,9 @@ export const refs = {
 	User: packedUserSchema,
 
 	UserList: packedUserListSchema,
+	UserGroup: packedUserGroupSchema,
 	App: packedAppSchema,
+	MessagingMessage: packedMessagingMessageSchema,
 	Note: packedNoteSchema,
 	NoteReaction: packedNoteReactionSchema,
 	NoteFavorite: packedNoteFavoriteSchema,
@@ -52,6 +57,7 @@ export const refs = {
 	RenoteMuting: packedRenoteMutingSchema,
 	Blocking: packedBlockingSchema,
 	Hashtag: packedHashtagSchema,
+	InviteCode: packedInviteCodeSchema,
 	Page: packedPageSchema,
 	Channel: packedChannelSchema,
 	QueueCount: packedQueueCountSchema,

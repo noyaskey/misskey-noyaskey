@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted } from 'vue';
+import { onBeforeUnmount, onMounted, reactive } from 'vue';
 import * as Misskey from 'misskey-js';
 import * as os from '@/os';
 import { useStream } from '@/stream';
@@ -40,6 +40,7 @@ import { $i } from '@/account';
 import { userName } from "@/filters/user"
 
 const props = withDefaults(defineProps<{
+	profile: Misskey.entities.MeDetailed,
 	user: Misskey.entities.UserDetailed,
 	full?: boolean,
 	large?: boolean,

@@ -13,6 +13,7 @@ import type { DriveFile } from '@/models/entities/DriveFile.js';
 import type { NoteReaction } from '@/models/entities/NoteReaction.js';
 import type { Emoji } from '@/models/entities/Emoji.js';
 import type { Poll } from '@/models/entities/Poll.js';
+import type { MessagingMessage } from '@/models/entities/MessagingMessage.js';
 import type { PollVote } from '@/models/entities/PollVote.js';
 import { UserKeypairService } from '@/core/UserKeypairService.js';
 import { MfmService } from '@/core/MfmService.js';
@@ -25,7 +26,7 @@ import { CustomEmojiService } from '@/core/CustomEmojiService.js';
 import { isNotNull } from '@/misc/is-not-null.js';
 import { LdSignatureService } from './LdSignatureService.js';
 import { ApMfmService } from './ApMfmService.js';
-import type { IAccept, IActivity, IAdd, IAnnounce, IApDocument, IApEmoji, IApHashtag, IApImage, IApMention, IBlock, ICreate, IDelete, IFlag, IFollow, IKey, ILike, IMove, IObject, IPost, IQuestion, IReject, IRemove, ITombstone, IUndo, IUpdate } from './type.js';
+import type { IAccept, IActivity, IAdd, IAnnounce, IApDocument, IApEmoji, IApHashtag, IApImage, IApMention, IBlock, ICreate, IDelete, IFlag, IFollow, IKey, ILike, IMove, IObject, IPost, IRead, IQuestion, IReject, IRemove, ITombstone, IUndo, IUpdate } from './type.js';
 import type { IIdentifier } from './models/identifier.js';
 
 @Injectable()
@@ -309,7 +310,7 @@ export class ApRendererService {
 	}
 
 	@bindThis
-	public async renderNote(note: Note, dive = true): Promise<IPost> {
+	public async renderNote(note: Note, dive = true, isTalk = false): Promise<IPost> {
 		const getPromisedFiles = async (ids: string[]) => {
 			if (!ids || ids.length === 0) return [];
 			const items = await this.driveFilesRepository.findBy({ id: In(ids) });
@@ -424,6 +425,10 @@ export class ApRendererService {
 			})),
 		} as const : {};
 
+		const asTalk = isTalk ? {
+			_misskey_talk: true,
+		} as const : {};
+
 		return {
 			id: `${this.config.url}/notes/${note.id}`,
 			type: 'Note',
@@ -445,6 +450,7 @@ export class ApRendererService {
 			sensitive: note.cw != null || files.some(file => file.isSensitive),
 			tag,
 			...asPoll,
+			...asTalk,
 		};
 	}
 
@@ -552,6 +558,15 @@ export class ApRendererService {
 	}
 
 	@bindThis
+	public renderRead(user: { id: User['id'] }, message: MessagingMessage): IRead {
+		return {
+			type: 'Read',
+			actor: `${this.config.url}/users/${user.id}`,
+			object: message.uri!,
+		};
+	}
+
+	@bindThis
 	public renderReject(object: any, user: { id: User['id'] }): IReject {
 		return {
 			type: 'Reject',
@@ -654,6 +669,7 @@ export class ApRendererService {
 					'_misskey_reaction': 'misskey:_misskey_reaction',
 					'_misskey_votes': 'misskey:_misskey_votes',
 					'isCat': 'misskey:isCat',
+					'_misskey_talk': 'misskey:_misskey_talk',
 					// vcard
 					vcard: 'http://www.w3.org/2006/vcard/ns#',
 				},

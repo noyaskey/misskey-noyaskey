@@ -3,15 +3,21 @@ import * as Redis from 'ioredis';
 import type { User } from '@/models/entities/User.js';
 import type { Note } from '@/models/entities/Note.js';
 import type { UserList } from '@/models/entities/UserList.js';
+import type { UserGroup } from '@/models/entities/UserGroup.js';
 import type { Antenna } from '@/models/entities/Antenna.js';
+import type { Channel } from '@/models/entities/Channel.js';
 import type {
 	StreamChannels,
 	AdminStreamTypes,
 	AntennaStreamTypes,
 	BroadcastTypes,
+	ChannelStreamTypes,
 	DriveStreamTypes,
+	GroupMessagingStreamTypes,
 	InternalStreamTypes,
 	MainStreamTypes,
+	MessagingIndexStreamTypes,
+	MessagingStreamTypes,
 	NoteStreamTypes,
 	UserListStreamTypes,
 	RoleTimelineStreamTypes,
@@ -72,6 +78,11 @@ export class GlobalEventService {
 			body: value,
 		});
 	}
+	
+	@bindThis
+	public publishChannelStream<K extends keyof ChannelStreamTypes>(channelId: Channel['id'], type: K, value?: ChannelStreamTypes[K]): void {
+		this.publish(`channelStream:${channelId}`, type, typeof value === 'undefined' ? null : value);
+	}
 
 	@bindThis
 	public publishUserListStream<K extends keyof UserListStreamTypes>(listId: UserList['id'], type: K, value?: UserListStreamTypes[K]): void {
@@ -86,6 +97,21 @@ export class GlobalEventService {
 	@bindThis
 	public publishRoleTimelineStream<K extends keyof RoleTimelineStreamTypes>(roleId: Role['id'], type: K, value?: RoleTimelineStreamTypes[K]): void {
 		this.publish(`roleTimelineStream:${roleId}`, type, typeof value === 'undefined' ? null : value);
+	}
+
+	@bindThis
+	public publishMessagingStream<K extends keyof MessagingStreamTypes>(userId: User['id'], otherpartyId: User['id'], type: K, value?: MessagingStreamTypes[K]): void {
+		this.publish(`messagingStream:${userId}-${otherpartyId}`, type, typeof value === 'undefined' ? null : value);
+	}
+
+	@bindThis
+	public publishGroupMessagingStream<K extends keyof GroupMessagingStreamTypes>(groupId: UserGroup['id'], type: K, value?: GroupMessagingStreamTypes[K]): void {
+		this.publish(`messagingStream:${groupId}`, type, typeof value === 'undefined' ? null : value);
+	}
+
+	@bindThis
+	public publishMessagingIndexStream<K extends keyof MessagingIndexStreamTypes>(userId: User['id'], type: K, value?: MessagingIndexStreamTypes[K]): void {
+		this.publish(`messagingIndexStream:${userId}`, type, typeof value === 'undefined' ? null : value);
 	}
 
 	@bindThis

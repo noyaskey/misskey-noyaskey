@@ -1998,3 +1998,10 @@ _webhookSettings:
     renote: "When renoted"
     reaction: "When receiving a reaction"
     mention: "When being mentioned"
+
+allowFollow: "Allow Follow"
+flagCarefulRemote: "Follower requests from remote require approval"
+flagCarefulBot: "Follower requests from bot require approval"
+flagCarefulMassive: "Massive follow requests pending approval"
+notesCountVisibility: "Notes Count Visibility"
+notesCountVisibilityDescription: "Allows you to configure who can see who your notes count."

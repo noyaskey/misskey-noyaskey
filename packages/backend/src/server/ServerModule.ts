@@ -36,6 +36,8 @@ import { UserListChannelService } from './api/stream/channels/user-list.js';
 import { OpenApiServerService } from './api/openapi/OpenApiServerService.js';
 import { ClientLoggerService } from './web/ClientLoggerService.js';
 import { RoleTimelineChannelService } from './api/stream/channels/role-timeline.js';
+import { MessagingChannelService } from './api/stream/channels/messaging.js';
+import { MessagingIndexChannelService } from './api/stream/channels/messaging-index.js';
 
 @Module({
 	imports: [
@@ -71,6 +73,8 @@ import { RoleTimelineChannelService } from './api/stream/channels/role-timeline.
 		GlobalTimelineChannelService,
 		HashtagChannelService,
 		RoleTimelineChannelService,
+		MessagingChannelService,
+		MessagingIndexChannelService,
 		HomeTimelineChannelService,
 		HybridTimelineChannelService,
 		LocalTimelineChannelService,

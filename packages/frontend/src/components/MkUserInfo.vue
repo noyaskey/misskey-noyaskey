@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts" setup>
+import { reactive } from 'vue';
 import * as misskey from 'misskey-js';
 import MkFollowButton from '@/components/MkFollowButton.vue';
 import { userPage } from '@/filters/user';

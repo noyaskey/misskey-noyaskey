@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { defineAsyncComponent, computed, onMounted, onUnmounted, nextTick, watch, reactive } from 'vue';
 import calcAge from 's-age';
 import * as misskey from 'misskey-js';
 import MkNote from '@/components/MkNote.vue';

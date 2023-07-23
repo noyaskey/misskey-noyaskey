@@ -11,7 +11,7 @@ import { awaitAll } from '@/misc/prelude/await-all.js';
 import { USER_ACTIVE_THRESHOLD, USER_ONLINE_THRESHOLD } from '@/const.js';
 import type { LocalUser, PartialLocalUser, PartialRemoteUser, RemoteUser, User } from '@/models/entities/User.js';
 import { birthdaySchema, descriptionSchema, localUsernameSchema, locationSchema, nameSchema, passwordSchema } from '@/models/entities/User.js';
-import type { UsersRepository, UserSecurityKeysRepository, FollowingsRepository, FollowRequestsRepository, BlockingsRepository, MutingsRepository, DriveFilesRepository, NoteUnreadsRepository, ChannelFollowingsRepository, UserNotePiningsRepository, UserProfilesRepository, InstancesRepository, AnnouncementReadsRepository, AnnouncementsRepository, PagesRepository, UserProfile, RenoteMutingsRepository, UserMemoRepository } from '@/models/index.js';
+import type { UsersRepository, UserSecurityKeysRepository, FollowingsRepository, FollowRequestsRepository, BlockingsRepository, MutingsRepository, DriveFilesRepository, NoteUnreadsRepository, ChannelFollowingsRepository, UserNotePiningsRepository, UserProfilesRepository, InstancesRepository, AnnouncementReadsRepository, AnnouncementsRepository, PagesRepository, UserProfile, RenoteMutingsRepository, UserMemoRepository, MessagingMessagesRepository, UserGroupJoiningsRepository } from '@/models/index.js';
 import { bindThis } from '@/decorators.js';
 import { RoleService } from '@/core/RoleService.js';
 import { ApPersonService } from '@/core/activitypub/models/ApPersonService.js';
@@ -22,6 +22,7 @@ import type { CustomEmojiService } from '../CustomEmojiService.js';
 import type { NoteEntityService } from './NoteEntityService.js';
 import type { DriveFileEntityService } from './DriveFileEntityService.js';
 import type { PageEntityService } from './PageEntityService.js';
+import { notesCountVisibility } from '@/types.js';
 
 type IsUserDetailed<Detailed extends boolean> = Detailed extends true ? Packed<'UserDetailed'> : Packed<'UserLite'>;
 type IsMeAndIsUserDetailed<ExpectsMe extends boolean | null, Detailed extends boolean> =
@@ -107,6 +108,12 @@ export class UserEntityService implements OnModuleInit {
 
 		@Inject(DI.announcementReadsRepository)
 		private announcementReadsRepository: AnnouncementReadsRepository,
+
+		@Inject(DI.messagingMessagesRepository)
+		private messagingMessagesRepository: MessagingMessagesRepository,
+
+		@Inject(DI.userGroupJoiningsRepository)
+		private userGroupJoiningsRepository: UserGroupJoiningsRepository,
 
 		@Inject(DI.announcementsRepository)
 		private announcementsRepository: AnnouncementsRepository,
@@ -212,6 +219,36 @@ export class UserEntityService implements OnModuleInit {
 		});
 	}
 
+	@bindThis
+	public async getHasUnreadMessagingMessage(userId: User['id']): Promise<boolean> {
+		const mute = await this.mutingsRepository.findBy({
+			muterId: userId,
+		});
+
+		const joinings = await this.userGroupJoiningsRepository.findBy({ userId: userId });
+
+		const groupQs = Promise.all(joinings.map(j => this.messagingMessagesRepository.createQueryBuilder('message')
+			.where('message.groupId = :groupId', { groupId: j.userGroupId })
+			.andWhere('message.userId != :userId', { userId: userId })
+			.andWhere('NOT (:userId = ANY(message.reads))', { userId: userId })
+			.andWhere('message.createdAt > :joinedAt', { joinedAt: j.createdAt }) // 自分が加入する前の会話については、未読扱いしない
+			.getOne().then(x => x != null)));
+
+		const [withUser, withGroups] = await Promise.all([
+			this.messagingMessagesRepository.count({
+				where: {
+					recipientId: userId,
+					isRead: false,
+					...(mute.length > 0 ? { userId: Not(In(mute.map(x => x.muteeId))) } : {}),
+				},
+				take: 1,
+			}).then(count => count > 0),
+			groupQs,
+		]);
+
+		return withUser || withGroups.some(x => x);
+	}
+	
 	@bindThis
 	public async getHasUnreadAnnouncement(userId: User['id']): Promise<boolean> {
 		const reads = await this.announcementReadsRepository.findBy({
@@ -350,6 +387,11 @@ export class UserEntityService implements OnModuleInit {
 		const isModerator = isMe && opts.detail ? this.roleService.isModerator(user) : null;
 		const isAdmin = isMe && opts.detail ? this.roleService.isAdministrator(user) : null;
 
+		const notesCount = profile == null ? null :
+		(profile.notesCountVisibility === 'public') || isMe ? user.notesCount :
+		(profile.notesCountVisibility === 'followers') && (relation && relation.isFollowing) ? user.notesCount :
+		null;
+
 		const falsy = opts.detail ? false : undefined;
 
 		const packed = {
@@ -402,7 +444,7 @@ export class UserEntityService implements OnModuleInit {
 				fields: profile!.fields,
 				followersCount: followersCount ?? 0,
 				followingCount: followingCount ?? 0,
-				notesCount: user.notesCount,
+				notesCount: notesCount ?? 0,
 				pinnedNoteIds: pins.map(pin => pin.noteId),
 				pinnedNotes: this.noteEntityService.packMany(pins.map(pin => pin.note!), me, {
 					detail: true,
@@ -411,6 +453,7 @@ export class UserEntityService implements OnModuleInit {
 				pinnedPage: profile!.pinnedPageId ? this.pageEntityService.pack(profile!.pinnedPageId, me) : null,
 				publicReactions: profile!.publicReactions,
 				ffVisibility: profile!.ffVisibility,
+				notesCountVisibility: profile!.notesCountVisibility,
 				twoFactorEnabled: profile!.twoFactorEnabled,
 				usePasswordLessLogin: profile!.usePasswordLessLogin,
 				securityKeys: profile!.twoFactorEnabled
@@ -445,7 +488,10 @@ export class UserEntityService implements OnModuleInit {
 				alwaysMarkNsfw: profile!.alwaysMarkNsfw,
 				autoSensitive: profile!.autoSensitive,
 				carefulBot: profile!.carefulBot,
+				carefulRemote: profile!.carefulRemote,
+				carefulMassive: profile!.carefulMassive,
 				autoAcceptFollowed: profile!.autoAcceptFollowed,
+				allowFollow: profile!.allowFollow,
 				noCrawle: profile!.noCrawle,
 				preventAiLearning: profile!.preventAiLearning,
 				isExplorable: user.isExplorable,

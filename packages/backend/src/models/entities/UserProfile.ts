@@ -1,5 +1,5 @@
 import { Entity, Column, Index, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
-import { obsoleteNotificationTypes, ffVisibility, notificationTypes } from '@/types.js';
+import { obsoleteNotificationTypes, ffVisibility, notificationTypes, notesCountVisibility } from '@/types.js';
 import { id } from '../id.js';
 import { User } from './User.js';
 import { Page } from './Page.js';
@@ -86,6 +86,12 @@ export class UserProfile {
 	})
 	public ffVisibility: typeof ffVisibility[number];
 
+	@Column('enum', {
+		enum: notesCountVisibility,
+		default: 'public',
+	})
+	public notesCountVisibility: typeof notesCountVisibility[number];
+
 	@Column('varchar', {
 		length: 128, nullable: true,
 	})
@@ -142,6 +148,11 @@ export class UserProfile {
 	public autoAcceptFollowed: boolean;
 
 	@Column('boolean', {
+		default: true,
+	})
+	public allowFollow: boolean;
+
+	@Column('boolean', {
 		default: false,
 		comment: 'Whether reject index by crawler.',
 	})
@@ -166,6 +177,16 @@ export class UserProfile {
 		default: false,
 	})
 	public carefulBot: boolean;
+
+	@Column('boolean', {
+		default: false,
+	})
+	public carefulRemote: boolean;
+
+	@Column('boolean', {
+		default: false,
+	})
+	public carefulMassive: boolean;
 
 	@Column('boolean', {
 		default: true,
