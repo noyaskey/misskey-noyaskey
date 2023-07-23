@@ -110,7 +110,7 @@
 					>
 						<i class="ti ti-quote"></i>
 					</button>
-					<button v-if="appearNote.text" ref="stealButton" :class="$style.footerButton" class="_button" @mousedown="stealMenu(appearNote, stealButton)">
+					<button v-if="appearNote.text && defaultStore.state.numberQuoteEnabled == true" ref="stealButton" :class="$style.footerButton" class="_button" @mousedown="stealMenu(appearNote, stealButton)">
 					<i class="ti ti-swipe"></i>
 					</button>
 					<button v-else :class="$style.footerButton" class="_button" disabled>
