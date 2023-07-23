@@ -2,7 +2,6 @@
 <div class="_gaps_m">
 	<MkSwitch v-model="allowFollow" class="_formBlock" @update:modelValue="save()">{{ i18n.ts.allowFollow }}</MkSwitch>
 	<MkSwitch v-if="allowFollow || !carefulRemote && !carefulBot && !carefulMassive" v-model="isLocked" @update:modelValue="save()">{{ i18n.ts.makeFollowManuallyApprove }}<template #caption>{{ i18n.ts.lockedAccountInfo }}</template></MkSwitch>
-	<MkSwitch v-if="isLocked" v-model="autoAcceptFollowed" @update:modelValue="save()">{{ i18n.ts.autoAcceptFollowed }}</MkSwitch>
 	<MkSwitch v-if="!isLocked" v-model="carefulBot" @update:model-value="save()">{{ i18n.ts.flagCarefulBot }}<template #caption>{{ i18n.ts.carefulBotInfo }}</template></MkSwitch>
 	<MkSwitch v-if="!isLocked" v-model="carefulMassive" @update:model-value="save()">{{ i18n.ts.flagCarefulMassive }}<template #caption>{{ i18n.ts.carefulMassiveInfo}}</template></MkSwitch>
 	<MkSwitch v-if="isLocked || carefulRemote || carefulBot || carefulMassive" v-model="autoAcceptFollowed" @update:model-value="save()">{{ i18n.ts.autoAcceptFollowed }}</MkSwitch>
