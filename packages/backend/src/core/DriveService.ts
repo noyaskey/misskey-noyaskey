@@ -646,6 +646,17 @@ export class DriveService {
 
 	@bindThis
 	public async deleteFile(file: DriveFile, isExpired = false) {
+		const emojis = await Emojis.find({
+			host: null,
+			publicUrl: file.webpublicUrl,
+		});
+	
+		const hasUsedforEmojis = emojis.length > 0;
+	
+		if (hasUsedforEmojis) {
+			return; // emojiのpublicUrlがfileに含まれている場合は処理をスキップ
+		}
+
 		if (file.storedInternal) {
 			this.internalStorageService.del(file.accessKey!);
 
@@ -673,6 +684,17 @@ export class DriveService {
 
 	@bindThis
 	public async deleteFileSync(file: DriveFile, isExpired = false) {
+		const emojis = await Emojis.find({
+			host: null,
+			publicUrl: file.webpublicUrl,
+		});
+	
+		const hasUsedforEmojis = emojis.length > 0;
+	
+		if (hasUsedforEmojis) {
+			return; // emojiのpublicUrlがfileに含まれている場合は処理をスキップ
+		}
+		
 		if (file.storedInternal) {
 			this.internalStorageService.del(file.accessKey!);
 
