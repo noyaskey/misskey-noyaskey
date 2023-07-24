@@ -1,10 +1,10 @@
 {
-	"name": "misskey",
-	"version": "13.13.2",
+	"name": "noyaskey",
+	"version": "13.13.2-takamatsu",
 	"codename": "nasubi",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/misskey-dev/misskey.git"
+		"url": "https://github.com/noyaskey/misskey-noyaskey.git"
 	},
 	"packageManager": "pnpm@8.6.0",
 	"workspaces": [
