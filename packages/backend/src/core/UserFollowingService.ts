@@ -159,14 +159,14 @@ export class UserFollowingService implements OnModuleInit {
 				));
 			}
 
-			//TODO: フォロワーがisRootなアカウントかつ、フォロー対象がローカルユーザーであればisLockedであってもフォローリクエストを貫通(autoAccept)する
-			if (follower.isRoot && (this.userEntityService.isLocalUser(followee) && followee.isLocked)) {
+			//TODO: フォロワーがisRootなアカウントかつ、フォロー対象がローカルユーザーであればisLockedや!allowFollowであってもフォローリクエストを貫通(autoAccept)する
+			if (follower.isRoot && (this.userEntityService.isLocalUser(followee) && (followee.isLocked || !followeeProfile.allowFollow))) {
 				autoAccept = true;
 			}
 
 			//TODO: フォロワーがisRootなアカウントである場合、フォロー対象がisLockedであってもフォローリクエストを貫通する ←　邪悪すぎるので削除
 
-			if (!autoAccept && this.userEntityService.isLocalUser(followee) && !followeeProfile.allowFollow) {
+			if (!follower.isRoot && !autoAccept && this.userEntityService.isLocalUser(followee) && !followeeProfile.allowFollow) {
 				if (this.userEntityService.isRemoteUser(follower) && this.userEntityService.isLocalUser(followee)) {
 					const content = this.apRendererService.addContext(this.apRendererService.renderReject(this.apRendererService.renderFollow(follower, followee, requestId), followee));
 					this.queueService.deliver(followee , content, follower.inbox, false);
