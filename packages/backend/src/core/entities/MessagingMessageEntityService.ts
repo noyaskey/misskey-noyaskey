@@ -38,7 +38,6 @@ export class MessagingMessageEntityService {
 		};
 
 		const message = typeof src === 'object' ? src : await this.messagingMessagesRepository.findOneByOrFail({ id: src });
-		console.log(message.text);
 
 		return {
 			id: message.id,

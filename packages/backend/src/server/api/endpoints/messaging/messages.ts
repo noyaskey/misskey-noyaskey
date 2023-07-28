@@ -107,7 +107,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 					.setParameter('recipientId', recipient.id);
 
 				const messages = await query.take(ps.limit).getMany();
-				console.log(messages)
 
 				// Mark all as read
 				if (ps.markAsRead) {
