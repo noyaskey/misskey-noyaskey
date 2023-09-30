@@ -211,8 +211,8 @@
 	import { stealMenu } from '@/scripts/steal-menu';
 	
 	const profile = reactive({
-		isCat: $i.isCat,
-		speakAsCat: $i.speakAsCat,
+		isCat: $i && $i.isCat,
+		speakAsCat: $i && $i.speakAsCat,
 	});
 
 	const props = defineProps<{
@@ -259,11 +259,15 @@
 	
 	let isFavorited = ref(false);
 	onMounted(async () => {
-		const response = await os.api('notes/state', {
-			noteId: appearNote.id,
-		});
-		if (response) {
-			isFavorited.value = response.isFavorited
+		if ($i) {
+			const response = await os.api('notes/state', {
+				noteId: appearNote.id,
+			});
+			if (response) {
+				isFavorited.value = response.isFavorited
+			}
+		} else {
+			isFavorited.value = false;
 		}
 	});
 	
@@ -467,11 +471,15 @@
 	}
 	
 	async function getIsFavorited(): Promise<boolean> {
-		const response = await os.api('notes/state', {
-			noteId: appearNote.id,
-		});
-		if (response) {
-			return response.isFavorited;
+		if($i) {
+			const response = await os.api('notes/state', {
+				noteId: appearNote.id,
+			});
+			if (response) {
+				return response.isFavorited;
+			}
+		} else {
+			return false;
 		}
 	}
 	
